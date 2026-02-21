@@ -21,6 +21,7 @@
         const socket = io();
 
         let username = prompt("Enter your name:");
+
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
@@ -31,24 +32,19 @@
             e.preventDefault();
 
             if (input.value.trim() !== '') {
-                socket.emit('chat message', input.value);
+                socket.emit('chat message', {
+                    user: username,
+                    text: input.value
+                });
                 input.value = '';
             }
         });
 
-        socket.on('chat message', function (msg) {
+        socket.on('chat message', function (data) {
             const item = document.createElement('li');
-            item.textContent = msg;
+            item.textContent = data.user + ": " + data.text;
             messages.appendChild(item);
         });
-
-        socket.on('user joined', function (user) {
-            const item = document.createElement('li');
-            item.textContent = user + " - joined the chat";
-            item.style.color = "green";
-            messages.appendChild(item);
-        });
-
     </script>
 </body>
 
