@@ -1,66 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Realtime Chat</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Realtime Chat</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-
 <body>
 
-    <ul id="messages"></ul>
+  <ul id="messages"></ul>
 
-    <form id="form">
-        <input id="input" autocomplete="off" placeholder="Type a message..." />
-        <button type="submit">Send</button>
-    </form>
+  <form id="form">
+    <input id="input" autocomplete="off" placeholder="Type a message..." />
+    <button type="submit">Send</button>
+  </form>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
 
-        let username = prompt("Enter your name:");
-        if (!username) username = "Guest";
+    let username = prompt("Enter your name:");
+    if (!username) username = "Guest";
 
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-        const messages = document.getElementById('messages');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
 
-        socket.emit('join', username);
+    socket.emit('join', username);
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
 
-            if (input.value.trim() !== '') {
-                socket.emit('chat message', {
-                    text: input.value
-                });
-                input.value = '';
-            }
+      if (input.value.trim() !== '') {
+        socket.emit('chat message', {
+          text: input.value
         });
 
-        socket.on('chat message', function (data) {
-            const item = document.createElement('li');
+        input.value = '';
 
-            if (data.user === "System") {
-                item.classList.add("system");
-                item.textContent = data.text;
-            } else {
-                item.innerHTML = `
-      <span style="color:${data.color}; font-weight:bold;">
-        ${data.user}
-      </span>
-      : ${data.text}
-    `;
-            }
+        // 🔥 Keep keyboard open on mobile
+        input.focus();
+      }
+    });
 
-            messages.appendChild(item);
-            messages.scrollTop = messages.scrollHeight;
-        });
-    </script>
+    socket.on('chat message', function (data) {
+      const item = document.createElement('li');
+
+      if (data.system) {
+        item.classList.add('system');
+        item.textContent = data.text;
+      } else {
+        item.innerHTML = `
+          <span style="color:${data.color}; font-weight:bold;">
+            ${data.user}
+          </span>: ${data.text}
+        `;
+      }
+
+      messages.appendChild(item);
+
+      // 🔥 Auto-scroll
+      messages.scrollTop = messages.scrollHeight;
+
+      // 🔥 Keep keyboard active on mobile
+      input.focus();
+    });
+  </script>
 
 </body>
-
 </html>

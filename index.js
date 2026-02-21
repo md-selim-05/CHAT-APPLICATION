@@ -38,7 +38,8 @@ io.on('connection', (socket) => {
     io.emit('chat message', {
       user: "System",
       text: `${username} joined the chat`,
-      color: "#888"
+      color: "#888",
+      system: true
     });
   });
 
@@ -48,7 +49,8 @@ io.on('connection', (socket) => {
     io.emit('chat message', {
       user: socket.username,
       text: data.text,
-      color: socket.color
+      color: socket.color,
+      system: false
     });
   });
 
@@ -57,10 +59,10 @@ io.on('connection', (socket) => {
       io.emit('chat message', {
         user: "System",
         text: `${socket.username} left the chat`,
-        color: "#888"
+        color: "#888",
+        system: true
       });
     }
-    console.log('User disconnected');
   });
 });
 
