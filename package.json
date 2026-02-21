@@ -1,8 +1,12 @@
 {
-    "name": "CHAT-APPLICATION",
+    "name": "chat-application",
     "version": "0.0.1",
     "description": "The chat Application",
     "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
     "dependencies": {
         "express": "^4.22.1",
         "socket.io": "^4.8.3"
