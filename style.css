@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding-bottom: 3rem;
+    background-color: rgb(15, 15, 46);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -30,13 +31,13 @@ body {
 }
 
 #form>button {
-    background: #333;
+    background: #83f81d;
     border: none;
     padding: 0 1rem;
     margin: 0.25rem;
-    border-radius: 3px;
+    border-radius: 15px;
     outline: none;
-    color: #fff;
+    color: #010e2a;
 }
 
 #messages {
@@ -46,9 +47,10 @@ body {
 }
 
 #messages>li {
+    color: #fff;
     padding: 0.5rem 1rem;
 }
 
-#messages>li:nth-child(odd) {
+/* #messages>li:nth-child(odd) {
     background: #efefef;
-}
+} */
