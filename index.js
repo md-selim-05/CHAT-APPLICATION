@@ -9,17 +9,15 @@ const server = createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Serve static files
 app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
 
-//color integrated
+// 🎨 Random Color Generator
 function getRandomColor() {
   const colors = [
     "#e74c3c", "#3498db", "#2ecc71",
@@ -29,13 +27,13 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Socket.io
+// 💬 Socket Logic
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('User connected');
 
   socket.on('join', (username) => {
     socket.username = username;
-    socket.color = getRandomColor(); // assign color
+    socket.color = getRandomColor();
 
     io.emit('chat message', {
       user: "System",
@@ -45,6 +43,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (data) => {
+    if (!socket.username) return;
+
     io.emit('chat message', {
       user: socket.username,
       text: data.text,
@@ -60,10 +60,10 @@ io.on('connection', (socket) => {
         color: "#888"
       });
     }
+    console.log('User disconnected');
   });
 });
 
-// ✅ Only this listen
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
