@@ -7,8 +7,12 @@
   <link rel="stylesheet" href="css/chat.css" />
 </head>
 <body>
-
   <div class="chat-container">
+    <div id="room-header">
+      <span>Room ID: <span id="display-room-id">...</span></span>
+      <button id="exit-btn">Exit Room</button>
+    </div>
+    
     <ul id="messages"></ul>
 
     <form id="form">
@@ -34,7 +38,21 @@
 
     socket.on("room created", (roomId) => {
       window.history.replaceState({}, '', `/chat?room=${roomId}&name=${username}`);
-      alert("Share this room key: " + roomId);
+      document.getElementById("display-room-id").textContent = roomId;
+    });
+
+    socket.on("room joined", (roomId) => {
+      document.getElementById("display-room-id").textContent = roomId;
+    });
+
+    socket.on("invalid room", () => {
+      alert("Invalid Room ID or the room has been deleted due to inactivity.");
+      window.location.href = "/room"; 
+    });
+
+    // Handle Exit Button Click
+    document.getElementById("exit-btn").addEventListener("click", () => {
+      window.location.href = "/room"; // Redirects back to the room selection menu
     });
 
     const messages = document.getElementById("messages");
@@ -43,7 +61,6 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
       if (input.value.trim() !== "") {
         socket.emit("chat message", { text: input.value });
         input.value = "";
@@ -67,14 +84,9 @@
       }
 
       messages.appendChild(li);
-
-      // Auto scroll to bottom
       messages.scrollTop = messages.scrollHeight;
-
-      // Keep keyboard open on mobile
       input.focus();
     });
   </script>
-
 </body>
 </html>

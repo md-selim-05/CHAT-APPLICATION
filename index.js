@@ -37,11 +37,18 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+// Stores valid room IDs
+const activeRooms = new Set(); 
+// Stores timeouts for room deletion
+const roomTimeouts = new Map(); 
+
 io.on('connection', (socket) => {
 
   // Create Room
   socket.on('create room', (username) => {
     const roomId = uuidv4().slice(0, 6);
+    
+    activeRooms.add(roomId);
 
     socket.join(roomId);
     socket.username = username;
@@ -60,10 +67,23 @@ io.on('connection', (socket) => {
 
   // Join Room
   socket.on('join room', ({ username, roomId }) => {
+    if (!activeRooms.has(roomId)) {
+      socket.emit('invalid room'); 
+      return;
+    }
+
+    // NEW: If the room was scheduled for deletion (e.g., during a refresh), cancel it!
+    if (roomTimeouts.has(roomId)) {
+      clearTimeout(roomTimeouts.get(roomId));
+      roomTimeouts.delete(roomId);
+    }
+
     socket.join(roomId);
     socket.username = username;
     socket.roomId = roomId;
     socket.color = getRandomColor();
+    
+    socket.emit('room joined', roomId); 
 
     io.to(roomId).emit('chat message', {
       user: "System",
@@ -93,6 +113,20 @@ io.on('connection', (socket) => {
         color: "#aaa",
         system: true
       });
+
+      const room = io.sockets.adapter.rooms.get(socket.roomId);
+      
+      // NEW: Instead of immediate deletion, wait 10 seconds
+      if (!room || room.size === 0) {
+        const timeout = setTimeout(() => {
+          activeRooms.delete(socket.roomId);
+          roomTimeouts.delete(socket.roomId);
+          console.log(`Room ${socket.roomId} auto-deleted (empty for 10s)`);
+        }, 5000); // 10000 ms = 10 seconds grace period
+        
+        // Save the timeout so we can cancel it if they reconnect
+        roomTimeouts.set(socket.roomId, timeout);
+      }
     }
   });
 });
