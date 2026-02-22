@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
 
     io.to(roomId).emit('chat message', {
       user: "System",
-      text: `${username} joined the room`,
+      text: `${username} - joined the room`,
       color: "#aaa",
       system: true
     });
@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
     if (socket.roomId && socket.username) {
       io.to(socket.roomId).emit('chat message', {
         user: "System",
-        text: `${socket.username} left the room`,
+        text: `${socket.username} - left the room`,
         color: "#aaa",
         system: true
       });
