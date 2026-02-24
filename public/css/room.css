@@ -4,8 +4,8 @@
 
 body {
   margin: 0;
-  font-family: Arial;
-  background: #0f2027;
+  font-family: Arial, sans-serif;
+  background: #0f2027; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,37 +15,126 @@ body {
 
 .card {
   background: #1e2a38;
-  padding: 35px;
-  border-radius: 12px;
-  width: 350px;
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 360px;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.toggle-wrapper {
+  position: relative;
+  display: flex;
+  background: #121922; 
+  border-radius: 40px;
+  border: 4px solid #121922;
+  margin-bottom: 30px;
+}
+
+.toggle-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 36px;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 1;
+}
+
+.toggle-bg.slide-right {
+  transform: translateX(100%);
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 14px 0;
+  border: none;
+  background: transparent;
+  color: #888; 
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.toggle-btn.active {
+  color: #121922;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.4s ease forwards; 
+}
+
+.form-container.hidden {
+  display: none;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f1f1f1;
 }
 
 input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: none;
+  padding: 14px 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 2px solid #2c3e50;
+  background: #0f1620;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-button {
+input::placeholder {
+  color: #666;
+}
+
+input:focus {
+  border-color: #3498db;
+}
+
+.action-btn {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   border: none;
   background: #3498db;
   color: white;
-  border-radius: 6px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  transition: background 0.3s ease, transform 0.1s ease;
 }
 
-button:hover {
+.action-btn:hover {
   background: #2980b9;
 }
 
-hr {
-  margin: 20px 0;
-  border-color: #444;
+.action-btn:active {
+  transform: scale(0.98);
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

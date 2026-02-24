@@ -1,40 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Room Options</title>
   <link rel="stylesheet" href="./css/room.css">
 </head>
-<body class="center">
+<body>
 
   <div class="card">
-    <h2>Your Name</h2>
-    <input id="username" placeholder="Enter your name" />
+    
+    <div class="toggle-wrapper">
+      <div class="toggle-bg" id="slider"></div>
+      <button class="toggle-btn active" id="btn-create" onclick="switchTab('create')">
+        Create Room
+      </button>
+      <button class="toggle-btn" id="btn-join" onclick="switchTab('join')">
+        Join Room
+      </button>
+    </div>
 
-    <h2>Create Room</h2>
-    <button onclick="createRoom()">Create Room</button>
+    <div class="form-container" id="form-create">
+      <h2>Start a new chat</h2>
+      <input type="text" id="create-username" placeholder="Enter your username" autocomplete="off" />
+      <button class="action-btn" onclick="createRoom()">Create</button>
+    </div>
 
-    <hr>
+    <div class="form-container hidden" id="form-join">
+      <h2>Join existing chat</h2>
+      <input type="text" id="join-username" placeholder="Enter your username" autocomplete="off" />
+      <input type="text" id="join-roomKey" placeholder="Enter 6-digit Room ID" autocomplete="off" />
+      <button class="action-btn" onclick="joinRoom()">Join</button>
+    </div>
 
-    <h2>Join Room</h2>
-    <input id="roomKey" placeholder="Enter Room Key" />
-    <button onclick="joinRoom()">Join Room</button>
   </div>
 
   <script>
-    function createRoom() {
-      const name = document.getElementById("username").value;
-      if (!name) return alert("Enter your name");
+   
+    function switchTab(tab) {
+      const createForm = document.getElementById('form-create');
+      const joinForm = document.getElementById('form-join');
+      const btnCreate = document.getElementById('btn-create');
+      const btnJoin = document.getElementById('btn-join');
+      const slider = document.getElementById('slider');
 
-      window.location.href = `/chat?create=true&name=${name}`;
+      if (tab === 'create') {
+        createForm.classList.remove('hidden');
+        joinForm.classList.add('hidden');
+        
+        btnCreate.classList.add('active');
+        btnJoin.classList.remove('active');
+        
+        slider.classList.remove('slide-right');
+      } else {
+        createForm.classList.add('hidden');
+        joinForm.classList.remove('hidden');
+        
+        btnCreate.classList.remove('active');
+        btnJoin.classList.add('active');
+        
+        slider.classList.add('slide-right');
+      }
+    }
+
+    function createRoom() {
+      const name = document.getElementById("create-username").value.trim();
+      if (!name) return alert("Please enter your username.");
+      window.location.href = `/chat?create=true&name=${encodeURIComponent(name)}`;
     }
 
     function joinRoom() {
-      const name = document.getElementById("username").value;
-      const room = document.getElementById("roomKey").value;
-
-      if (!name || !room) return alert("Fill all fields");
-
-      window.location.href = `/chat?room=${room}&name=${name}`;
+      const name = document.getElementById("join-username").value.trim();
+      const room = document.getElementById("join-roomKey").value.trim();
+      if (!name || !room) return alert("Please fill in both fields.");
+      window.location.href = `/chat?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}`;
     }
   </script>
 

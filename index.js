@@ -12,11 +12,10 @@ const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Serve static files
 app.use(express.static(join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public/index.html'));
+  res.sendFile(join(__dirname, 'public/landing.html'));
 });
 
 app.get('/room', (req, res) => {
@@ -27,7 +26,6 @@ app.get('/chat', (req, res) => {
   res.sendFile(join(__dirname, 'public/chat.html'));
 });
 
-// Random color generator
 function getRandomColor() {
   const colors = [
     "#e74c3c", "#3498db", "#2ecc71",
@@ -37,14 +35,11 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Stores valid room IDs
 const activeRooms = new Set(); 
-// Stores timeouts for room deletion
 const roomTimeouts = new Map(); 
 
 io.on('connection', (socket) => {
 
-  // Create Room
   socket.on('create room', (username) => {
     const roomId = uuidv4().slice(0, 6);
     
@@ -65,14 +60,12 @@ io.on('connection', (socket) => {
     });
   });
 
-  // Join Room
   socket.on('join room', ({ username, roomId }) => {
     if (!activeRooms.has(roomId)) {
       socket.emit('invalid room'); 
       return;
     }
 
-    // NEW: If the room was scheduled for deletion (e.g., during a refresh), cancel it!
     if (roomTimeouts.has(roomId)) {
       clearTimeout(roomTimeouts.get(roomId));
       roomTimeouts.delete(roomId);
@@ -93,7 +86,7 @@ io.on('connection', (socket) => {
     });
   });
 
-  // Chat Message
+ 
   socket.on('chat message', (data) => {
     if (!socket.roomId) return;
 
@@ -116,15 +109,13 @@ io.on('connection', (socket) => {
 
       const room = io.sockets.adapter.rooms.get(socket.roomId);
       
-      // NEW: Instead of immediate deletion, wait 10 seconds
       if (!room || room.size === 0) {
         const timeout = setTimeout(() => {
           activeRooms.delete(socket.roomId);
           roomTimeouts.delete(socket.roomId);
-          console.log(`Room ${socket.roomId} auto-deleted (empty for 10s)`);
-        }, 5000); // 10000 ms = 10 seconds grace period
+          console.log(`Room ${socket.roomId} auto-deleted (empty for 5s)`); 
+        }, 5000); 
         
-        // Save the timeout so we can cancel it if they reconnect
         roomTimeouts.set(socket.roomId, timeout);
       }
     }

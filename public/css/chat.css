@@ -2,23 +2,20 @@
   box-sizing: border-box;
 }
 
-/* Prevent body scroll */
 html, body {
   margin: 0;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%; 
   font-family: Arial, sans-serif;
   background: #0f2027;
+  overscroll-behavior-y: contain; 
 }
 
-/* Use dynamic viewport height (mobile safe) */
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  min-height: 100dvh; 
 }
 
-/* Chat area */
 #messages {
   list-style: none;
   margin: 0;
@@ -27,11 +24,10 @@ html, body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Chat from bottom */
+  justify-content: flex-end; 
   gap: 10px;
 }
 
-/* Message bubble */
 #messages li {
   background: #ffffff;
   color: #000;
@@ -43,7 +39,6 @@ html, body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
-/* System messages */
 #messages li.system {
   background: transparent;
   color: #ccc;
@@ -51,18 +46,15 @@ html, body {
   box-shadow: none;
 }
 
-/* Username */
 .username {
   font-weight: bold;
   margin-right: 5px;
 }
 
-/* Message text */
 .message-text {
   word-break: break-word;
 }
 
-/* Input area */
 #form {
   display: flex;
   padding: 10px;
@@ -70,17 +62,15 @@ html, body {
   gap: 10px;
 }
 
-/* Input */
 #input {
   flex: 1;
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
-  font-size: 16px; /* Prevent iOS zoom */
+  font-size: 16px; 
   outline: none;
 }
 
-/* Send button */
 button[type="submit"] {
   padding: 10px 18px;
   border-radius: 20px;
@@ -95,7 +85,6 @@ button[type="submit"]:hover {
   background: #2980b9;
 }
 
-/* Room Header Styling */
 #room-header {
   background: #1e2a38;
   color: #fff;
@@ -106,7 +95,7 @@ button[type="submit"]:hover {
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   z-index: 10;
   display: flex;
-  justify-content: space-between; /* Pushes ID left and Button right */
+  justify-content: space-between; 
   align-items: center;
 }
 
