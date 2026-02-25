@@ -22,6 +22,7 @@
     <div class="form-container" id="form-create">
       <h2>Start a new chat</h2>
       <input type="text" id="create-username" placeholder="Enter your username" autocomplete="off" />
+      <input type="number" id="create-capacity" placeholder="Room Capacity (e.g. 5)" min="2" max="50" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
       <button class="action-btn" onclick="createRoom()">Create</button>
     </div>
 
@@ -35,7 +36,6 @@
   </div>
 
   <script>
-   
     function switchTab(tab) {
       const createForm = document.getElementById('form-create');
       const joinForm = document.getElementById('form-join');
@@ -46,33 +46,34 @@
       if (tab === 'create') {
         createForm.classList.remove('hidden');
         joinForm.classList.add('hidden');
-        
         btnCreate.classList.add('active');
         btnJoin.classList.remove('active');
-        
         slider.classList.remove('slide-right');
       } else {
         createForm.classList.add('hidden');
         joinForm.classList.remove('hidden');
-        
         btnCreate.classList.remove('active');
         btnJoin.classList.add('active');
-        
         slider.classList.add('slide-right');
       }
     }
 
     function createRoom() {
       const name = document.getElementById("create-username").value.trim();
+      const capacity = document.getElementById("create-capacity").value.trim() || 10;
       if (!name) return alert("Please enter your username.");
-      window.location.href = `/chat?create=true&name=${encodeURIComponent(name)}`;
+      
+      sessionStorage.setItem('chatParams', JSON.stringify({ action: 'create', name, capacity }));
+      window.location.href = `/chat`;
     }
 
     function joinRoom() {
       const name = document.getElementById("join-username").value.trim();
       const room = document.getElementById("join-roomKey").value.trim();
       if (!name || !room) return alert("Please fill in both fields.");
-      window.location.href = `/chat?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}`;
+      
+      sessionStorage.setItem('chatParams', JSON.stringify({ action: 'join', name, room }));
+      window.location.href = `/chat`;
     }
   </script>
 

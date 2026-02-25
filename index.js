@@ -35,15 +35,18 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-const activeRooms = new Set(); 
+const activeRooms = new Map(); 
 const roomTimeouts = new Map(); 
 
 io.on('connection', (socket) => {
 
-  socket.on('create room', (username) => {
+  socket.on('create room', ({ username, capacity }) => {
     const roomId = uuidv4().slice(0, 6);
     
-    activeRooms.add(roomId);
+    activeRooms.set(roomId, {
+      capacity: parseInt(capacity) || 10,
+      users: new Set([socket.id])
+    });
 
     socket.join(roomId);
     socket.username = username;
@@ -51,18 +54,26 @@ io.on('connection', (socket) => {
     socket.color = getRandomColor();
 
     socket.emit('room created', roomId);
+    io.to(roomId).emit('room update', activeRooms.get(roomId).users.size);
 
     io.to(roomId).emit('chat message', {
       user: "System",
-      text: `${username} created the room`,
+      text: `${username} created the room (Max Capacity: ${activeRooms.get(roomId).capacity})`,
       color: "#aaa",
       system: true
     });
   });
 
   socket.on('join room', ({ username, roomId }) => {
-    if (!activeRooms.has(roomId)) {
-      socket.emit('invalid room'); 
+    const roomData = activeRooms.get(roomId);
+    
+    if (!roomData) {
+      socket.emit('invalid room', 'Invalid Room ID or the room has expired.'); 
+      return;
+    }
+
+    if (roomData.users.size >= roomData.capacity) {
+      socket.emit('invalid room', 'This room has reached its maximum capacity.');
       return;
     }
 
@@ -71,12 +82,14 @@ io.on('connection', (socket) => {
       roomTimeouts.delete(roomId);
     }
 
+    roomData.users.add(socket.id);
     socket.join(roomId);
     socket.username = username;
     socket.roomId = roomId;
     socket.color = getRandomColor();
     
     socket.emit('room joined', roomId); 
+    io.to(roomId).emit('room update', roomData.users.size);
 
     io.to(roomId).emit('chat message', {
       user: "System",
@@ -86,13 +99,13 @@ io.on('connection', (socket) => {
     });
   });
 
- 
   socket.on('chat message', (data) => {
     if (!socket.roomId) return;
 
     io.to(socket.roomId).emit('chat message', {
       user: socket.username,
       text: data.text,
+      replyTo: data.replyTo || null,
       color: socket.color,
       system: false
     });
@@ -100,6 +113,13 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     if (socket.roomId && socket.username) {
+      const roomData = activeRooms.get(socket.roomId);
+      
+      if (roomData) {
+        roomData.users.delete(socket.id);
+        io.to(socket.roomId).emit('room update', roomData.users.size);
+      }
+
       io.to(socket.roomId).emit('chat message', {
         user: "System",
         text: `${socket.username} - left the room`,

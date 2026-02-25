@@ -9,11 +9,25 @@
 <body>
   <div class="chat-container">
     <div id="room-header">
-      <span>Room ID: <span id="display-room-id">...</span></span>
-      <button id="exit-btn">Exit Room</button>
+      <div class="header-info">
+        <span>Room ID: <strong id="display-room-id">...</strong></span>
+        <button id="copy-btn" title="Copy Room ID">📋</button>
+        <span class="participants">👥 <span id="participant-count">0</span></span>
+      </div>
+      <div class="header-actions">
+        <button id="theme-btn" title="Toggle Light/Dark Mode">☀️</button>
+        <button id="exit-btn">Exit</button>
+      </div>
     </div>
     
     <ul id="messages"></ul>
+
+    <div id="reply-preview">
+      <div class="reply-content">
+        Replying to <strong id="reply-user"></strong>: <span id="reply-text"></span>
+      </div>
+      <button id="cancel-reply" title="Cancel Reply">✖</button>
+    </div>
 
     <form id="form">
       <input id="input" autocomplete="off" placeholder="Type a message..." />
@@ -24,35 +38,54 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+    let replyingTo = null; 
 
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get("name") || "Guest";
-    const create = params.get("create");
-    const room = params.get("room");
+    const chatParamsStr = sessionStorage.getItem('chatParams');
+    if (!chatParamsStr) {
+      window.location.href = "/room"; 
+    }
+    
+    const params = JSON.parse(chatParamsStr);
+    window.history.replaceState({}, '', `/chat`);
 
-    if (create) {
-      socket.emit("create room", username);
-    } else if (room) {
-      socket.emit("join room", { username, roomId: room });
+    if (params.action === 'create') {
+      socket.emit("create room", { username: params.name, capacity: params.capacity });
+    } else if (params.action === 'join') {
+      socket.emit("join room", { username: params.name, roomId: params.room });
     }
 
-    socket.on("room created", (roomId) => {
-      window.history.replaceState({}, '', `/chat?room=${roomId}&name=${username}`);
-      document.getElementById("display-room-id").textContent = roomId;
+    socket.on("room created", (roomId) => document.getElementById("display-room-id").textContent = roomId);
+    socket.on("room joined", (roomId) => document.getElementById("display-room-id").textContent = roomId);
+    socket.on("room update", (count) => document.getElementById("participant-count").textContent = count);
+    socket.on("invalid room", (msg) => { alert(msg); window.location.href = "/room"; });
+
+    document.getElementById("copy-btn").addEventListener("click", () => {
+      const roomId = document.getElementById("display-room-id").textContent;
+      if(roomId !== "...") {
+        navigator.clipboard.writeText(roomId).then(() => {
+          const btn = document.getElementById("copy-btn");
+          btn.textContent = "✅";
+          setTimeout(() => btn.textContent = "📋", 2000);
+        });
+      }
     });
 
-    socket.on("room joined", (roomId) => {
-      document.getElementById("display-room-id").textContent = roomId;
+    const themeBtn = document.getElementById("theme-btn");
+    themeBtn.addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      const targetTheme = currentTheme === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", targetTheme);
+      themeBtn.textContent = targetTheme === "light" ? "🌙" : "☀️";
     });
 
-    socket.on("invalid room", () => {
-      alert("Invalid Room ID or the room has been deleted due to inactivity.");
+    document.getElementById("exit-btn").addEventListener("click", () => {
+      sessionStorage.removeItem('chatParams');
       window.location.href = "/room"; 
     });
 
-    // Handle Exit Button Click
-    document.getElementById("exit-btn").addEventListener("click", () => {
-      window.location.href = "/room"; // Redirects back to the room selection menu
+    document.getElementById("cancel-reply").addEventListener("click", () => {
+      replyingTo = null;
+      document.getElementById("reply-preview").style.display = "none";
     });
 
     const messages = document.getElementById("messages");
@@ -62,8 +95,11 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (input.value.trim() !== "") {
-        socket.emit("chat message", { text: input.value });
+        socket.emit("chat message", { text: input.value, replyTo: replyingTo });
+        
         input.value = "";
+        replyingTo = null;
+        document.getElementById("reply-preview").style.display = "none";
         input.focus();
       }
     });
@@ -73,14 +109,57 @@
 
       if (data.system) {
         li.classList.add("system");
-        li.textContent = data.text;
+        li.innerHTML = `<div class="system-msg">${data.text}</div>`;
       } else {
-        li.innerHTML = `
-          <span class="username" style="color:${data.color}">
-            ${data.user}:
-          </span>
-          <span class="message-text">${data.text}</span>
+        const isOwnMessage = data.user === params.name;
+        li.classList.add(isOwnMessage ? "own-message" : "other-message");
+
+        let quoteHtml = "";
+        if (data.replyTo) {
+          const quoteUser = data.replyTo.user === params.name ? "You" : data.replyTo.user;
+          quoteHtml = `
+            <div class="quoted-msg">
+              <span class="quote-user">${quoteUser}</span>
+              <span class="quote-text">${data.replyTo.text}</span>
+            </div>
+          `;
+        }
+
+        const displayName = isOwnMessage ? "You" : data.user;
+        const nameColor = isOwnMessage ? "inherit" : data.color;
+
+        // Create a wrapper to hold both the bubble and the reply button side-by-side
+        const msgWrapper = document.createElement("div");
+        msgWrapper.classList.add("msg-wrapper");
+        
+        // The bubble only contains the text and background color now
+        const msgBubble = document.createElement("div");
+        msgBubble.classList.add("msg-bubble");
+        msgBubble.innerHTML = `
+          ${quoteHtml}
+          <div class="msg-text-content">
+            <span class="username" style="color:${nameColor}">${displayName}:</span>
+            <span class="message-text">${data.text}</span>
+          </div>
         `;
+
+        const replyBtn = document.createElement("button");
+        replyBtn.classList.add("reply-btn");
+        replyBtn.innerHTML = "↩️";
+        replyBtn.title = "Reply";
+        replyBtn.onclick = () => {
+          replyingTo = { user: data.user, text: data.text };
+          document.getElementById("reply-user").textContent = displayName;
+          document.getElementById("reply-text").textContent = data.text;
+          document.getElementById("reply-preview").style.display = "flex";
+          input.focus();
+        };
+
+        // Append both to the wrapper. CSS flex-direction handles placing the button on the correct side
+        msgWrapper.appendChild(msgBubble);
+        msgWrapper.appendChild(replyBtn);
+
+        li.appendChild(msgWrapper);
       }
 
       messages.appendChild(li);
