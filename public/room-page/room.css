@@ -1,0 +1,437 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e86e6eb5 0%, #d74fb3c3 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+}
+
+.layout-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  max-width: 900px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* --- LEFT PANEL --- */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.104);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.308);
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.288);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.tab-headers {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.tab-btn.active {
+  color: #333;
+  border-bottom: 3px solid #ff0000;
+}
+
+.form-title {
+  margin-bottom: 20px;
+}
+
+.badge {
+  background: #e2dcfc;
+  color: #5a4b9c;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.form-body.hidden {
+  display: none;
+}
+
+input {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.351);
+  background: rgba(255, 255, 255, 0.201);
+  color: #2a2828;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input::placeholder {
+  color: #696666;
+}
+
+input:focus {
+  background: rgba(249, 202, 202, 0.59);
+  border-color: #ffb3b3;
+  box-shadow: 0 0 10px rgba(255, 179, 179, 0.3);
+}
+
+/* --- Number Input Spinner Styling --- */
+/* Hide default ugly browser spinners */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {  
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Refined Minimalist Spinner Styling */
+.capacity-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.capacity-input-wrapper input {
+  padding-right: 40px; /* Arrows ke liye enough space */
+}
+
+.custom-spinners {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spin-btn {
+  background: transparent; /* No background */
+  border: none;            /* No border */
+  color: #646161;             /* Light gray color */
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.spin-btn:hover {
+  color: #351a1a; /* Hover karne pe theme ka pink/red accent color aayega */
+  transform: scale(1.2); /* Thoda sa bada hoga hover pe */
+}
+
+.spin-btn:active {
+  transform: scale(0.9);
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.desc-text {
+  font-size: 0.75rem;
+  color: #2c2929;
+  max-width: 60%;
+  line-height: 1.4;
+}
+
+.action-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.green-btn {
+  background: #a8e6cf;
+  color: #2b6b4f;
+  box-shadow: 0 4px 15px rgba(168, 230, 207, 0.4);
+}
+
+.green-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(168, 230, 207, 0.6);
+}
+
+.dark-card {
+  background: #1a1a1a;
+  border-radius: 30px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.288);
+}
+
+
+.logo-box {
+  height: 50px;
+  width: 150px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* color: #1a1a1a; */
+  padding: 5px 0;
+  /* border-radius: 15px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  object-fit: contain; */
+}
+
+.dis-logo {
+  height: auto; /* Tells the image to match the 50px height of its parent container */
+  width: 100px; /* Allows the width to scale naturally so your text logo doesn't warp */
+  object-fit: contain; /* Ensures the whole logo stays visible within its boundaries */
+  max-width: 150px; /* Optional: prevents the logo from getting too wide and pushing the discover button */
+}
+
+.discover-btn {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.discover-btn:hover {
+  color: #ffb3b3;
+}
+
+/* --- RIGHT PANEL (RED CARD) --- */
+.right-panel {
+  flex: 1.2;
+}
+
+.hero-card {
+  background: #e84a5f;
+  border-radius: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.288);
+  min-height: 450px;
+  display: block;
+  width: 100%;
+}
+
+.center-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  z-index: 1;
+  /* Lowest z-index so glass can blur it */
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 2;
+  /* Sits over the circle */
+}
+
+.hero-logo {
+  /* width: 90px; */
+  position: absolute;
+  bottom: 40px;
+  left: 30px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  z-index: 3;
+  /* Highest z-index so text remains sharp */
+}
+
+.hero-logo > img{
+  width: 90px;
+}
+
+.time-display {
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  color: white;
+  font-weight: 300;
+  z-index: 3;
+  /* Highest z-index */
+}
+
+#real-date {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+#real-day {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.hero-action-btn {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  padding: 12px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #e84a5f;
+  border: none;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 3;
+  /* Highest z-index */
+  transition: transform 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hero-action-btn:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   MOBILE VIEW & TABLET FIXES (Max-Width 768px)
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .layout-wrapper {
+    flex-direction: column-reverse;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  /* Reduced height as requested */
+  .hero-card {
+    min-height: 190px;
+    border-radius: 30px;
+  }
+
+  .hero-overlay {
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .time-display {
+    top: auto;
+    bottom: 20px;
+    left: 20px;
+  }
+
+  #real-date {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  #real-day {
+    font-size: 1.2rem;
+    margin-top: 0;
+  }
+
+  .hero-logo {
+    top: 20px;
+    left: 20px;
+    bottom: auto;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .hero-action-btn {
+    bottom: auto;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  /* Slightly smaller circle to fit reduced card height */
+  .center-circle {
+    width: 100px;
+    height: 100px;
+  }
+}
