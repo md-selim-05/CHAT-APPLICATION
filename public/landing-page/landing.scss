@@ -70,11 +70,10 @@ $bounce-transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
    ========================================================================== */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 html,
@@ -682,14 +681,23 @@ nav {
     }
 
     .bg-text {
-        position: sticky; top: 0; left: 0;
-        width: 100%; height: 100vh;
+        position: sticky; 
+        top: 0; 
+        left: 0;
+        width: 100%; 
+        height: 100vh;
         @include flex();
         font-family: "Rubik Dirt", system-ui;
-        font-size: 36vw; font-weight: 900;
-        text-transform: uppercase; letter-spacing: -1vw;
-        color: $text-light; opacity: 0.15; z-index: 1;
-        pointer-events: none; user-select: none; white-space: nowrap;
+        font-size: 36vw; 
+        font-weight: 900;
+        text-transform: uppercase; 
+        letter-spacing: -1vw;
+        color: $text-light; 
+        opacity: 0.15; 
+        z-index: 1;
+        pointer-events: none; 
+        user-select: none; 
+        white-space: nowrap;
     }
 
     .scroll-container {
