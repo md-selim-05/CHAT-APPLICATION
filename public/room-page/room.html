@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Options - AnnoChat</title>
+  <link rel="stylesheet" href="./room-page/room.css">
+  <link rel="icon" href="../ASSETS/Anno_Logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="layout-wrapper">
+
+    <div class="left-panel form-section-panels">
+
+      <div class="glass-card form-container">
+
+        <div class="tab-headers">
+          <button class="tab-btn active" id="tab-join" onclick="switchTab('join')">JOIN</button>
+          <button class="tab-btn" id="tab-create" onclick="switchTab('create')">CREATE</button>
+        </div>
+
+        <div class="form-title">
+          <span class="badge">AnnoRooms</span>
+        </div>
+
+        <div class="form-body" id="form-join">
+          <input type="text" id="join-username" placeholder="username (max 8)" autocomplete="off" maxlength="8" />
+          <input type="text" id="join-roomKey" placeholder="room id" autocomplete="off" />
+          <div class="form-footer">
+            <p class="desc-text">Enter your details to join an existing anonymous room.</p>
+            <button class="action-btn green-btn" onclick="joinRoom()">join</button>
+          </div>
+        </div>
+
+        <div class="form-body hidden" id="form-create">
+          <input type="text" id="create-username" placeholder="username (max 8)" autocomplete="off" maxlength="8" />
+
+          <div class="capacity-input-wrapper">
+            <input type="number" id="create-capacity" placeholder="room capacity (e.g. 5)" min="2" max="50"
+              autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <div class="custom-spinners">
+              <button type="button" class="spin-btn" onclick="document.getElementById('create-capacity').stepUp()">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+              </button>
+              <button type="button" class="spin-btn" onclick="document.getElementById('create-capacity').stepDown()">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-footer">
+            <p class="desc-text">Start a new room and share the ID with your friends.</p>
+            <button class="action-btn green-btn" onclick="createRoom()">create</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dark-card brand-container">
+        <div class="logo-box"><img class="dis-logo" src="../ASSETS/text-logo.png" alt=""></div>
+        <a href="./room-page/disco.html" class="discover-btn">DISCOVER</a>
+      </div>
+
+    </div>
+
+    <div class="right-panel hero-card">
+
+      <div class="center-circle"></div>
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-logo"><img src="../ASSETS/Anno_Logo.png" alt=""></div>
+
+      <div class="time-display">
+        <div id="real-date">03/02/2026</div>
+        <div id="real-day">MONDAY</div>
+      </div>
+
+      <button class="hero-action-btn" id="hero-toggle-btn" onclick="toggleOppositeTab()">CREATE</button>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentActiveTab = 'join';
+
+    function switchTab(tab) {
+      currentActiveTab = tab;
+      const createForm = document.getElementById('form-create');
+      const joinForm = document.getElementById('form-join');
+      const tabCreate = document.getElementById('tab-create');
+      const tabJoin = document.getElementById('tab-join');
+      const heroToggleBtn = document.getElementById('hero-toggle-btn');
+
+      if (tab === 'create') {
+        createForm.classList.remove('hidden');
+        joinForm.classList.add('hidden');
+        tabCreate.classList.add('active');
+        tabJoin.classList.remove('active');
+        heroToggleBtn.innerText = 'JOIN';
+      } else {
+        createForm.classList.add('hidden');
+        joinForm.classList.remove('hidden');
+        tabCreate.classList.remove('active');
+        tabJoin.classList.add('active');
+        heroToggleBtn.innerText = 'CREATE';
+      }
+    }
+
+    function toggleOppositeTab() {
+      if (currentActiveTab === 'join') {
+        switchTab('create');
+      } else {
+        switchTab('join');
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const dayNum = String(now.getDate()).padStart(2, '0');
+      const year = now.getFullYear();
+      document.getElementById('real-date').innerText = `${dayNum}/${month}/${year}`;
+
+      const days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+      document.getElementById('real-day').innerText = days[now.getDay()];
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function createRoom() {
+      const name = document.getElementById("create-username").value.trim();
+      const capacity = document.getElementById("create-capacity").value.trim() || 10;
+      if (!name) return alert("Please enter your username.");
+
+      sessionStorage.setItem('chatParams', JSON.stringify({ action: 'create', name, capacity }));
+      window.location.href = "/chat";
+    }
+
+    function joinRoom() {
+      const name = document.getElementById("join-username").value.trim();
+      const room = document.getElementById("join-roomKey").value.trim();
+      if (!name || !room) return alert("Please fill in both fields.");
+
+      sessionStorage.setItem('chatParams', JSON.stringify({ action: 'join', name, room }));
+      window.location.href = "/chat";
+    }
+  </script>
+</body>
+
+</html>
