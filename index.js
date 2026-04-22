@@ -46,7 +46,6 @@ const roomTimeouts = new Map();
 io.on('connection', (socket) => {
 
   socket.on('create room', ({ username, capacity }) => {
-    // ENFORCE: Max 8 Characters for Username
     username = String(username || "User").substring(0, 8);
     const roomId = uuidv4().slice(0, 6);
     
@@ -111,28 +110,22 @@ io.on('connection', (socket) => {
   socket.on('chat message', (data) => {
     if (!socket.roomId) return;
 
-    // ENFORCE: 2 Messages per second rate limit
     const now = Date.now();
     if (!socket.msgTimestamps) socket.msgTimestamps = [];
     
-    // Clear timestamps older than 1000ms (1 second)
     socket.msgTimestamps = socket.msgTimestamps.filter(t => now - t < 1000);
     
     if (socket.msgTimestamps.length >= 2) {
-      // Send a private system message to the spammer notifying them of the rate limit
       socket.emit('chat message', {
         user: "System",
         text: "Slow down! Maximum 2 messages per second allowed.",
         color: "#e74c3c",
         system: true
       });
-      return; // Ignore the message completely
+      return; 
     }
     
-    // Log the valid message timestamp
     socket.msgTimestamps.push(now);
-
-    // ENFORCE: Max 150 characters per message
     const safeText = String(data.text || "").substring(0, 150);
 
     io.to(socket.roomId).emit('chat message', {
