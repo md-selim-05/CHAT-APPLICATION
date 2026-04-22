@@ -19,7 +19,6 @@ body {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  /* --- DARK MODE UPDATES --- */
 }
 body.dark-mode {
   background: linear-gradient(135deg, rgb(21, 21, 60), rgb(49, 6, 49), rgb(97, 51, 59));
@@ -55,8 +54,7 @@ body.dark-mode .reply-preview {
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
 }
-body.dark-mode .mem-list,
-body.dark-mode .mem-head {
+body.dark-mode .mem-list, body.dark-mode .mem-head {
   background-color: #333;
   color: #fff;
 }
@@ -72,18 +70,12 @@ body.dark-mode .emoji-picker {
   background: #333;
   border-color: #555;
 }
-body.dark-mode {
-  /* Dark mode overrides for the new reply button */
-}
 body.dark-mode .reply-btn {
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
 }
 body.dark-mode .reply-btn:hover {
   background-color: rgba(0, 0, 0, 0.7);
-}
-body {
-  /* --- THEME SYSTEM --- */
 }
 body.theme-blue .chat-box {
   background-color: #87CEEB;
@@ -123,7 +115,7 @@ body.theme-dark-gray .member-box {
   gap: 10px;
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none; /* FIX 2: Prevent text selection */
+          user-select: none; /* Prevent text selection */
 }
 .chat-container .member-box .mem-head {
   width: 100%;
@@ -185,14 +177,12 @@ body.theme-dark-gray .member-box {
 }
 .chat-container .chat-box .chat-display .message-wrapper {
   display: flex;
-  /* Updated for the new reply button layout */
   flex-direction: row;
   align-items: center;
   gap: 10px;
   max-width: 80%;
   width: -moz-fit-content;
   width: fit-content;
-  /* Show the button when hovering over the wrapper */
 }
 .chat-container .chat-box .chat-display .message-wrapper:hover .reply-btn {
   opacity: 1;
@@ -200,7 +190,6 @@ body.theme-dark-gray .member-box {
 .chat-container .chat-box .chat-display .message-wrapper.self {
   align-self: flex-end;
   flex-direction: row-reverse;
-  /* Put the reply button on the left for own messages */
 }
 .chat-container .chat-box .chat-display .message-wrapper.self .message {
   background-color: #d1ffd1;
@@ -211,7 +200,11 @@ body.theme-dark-gray .member-box {
   color: #333;
   padding: 8px 14px;
   border-radius: 12px;
-  word-wrap: break-word;
+  /* Aggressive word wrapping to stop overflow */
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
   font-size: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-out;
@@ -225,9 +218,6 @@ body.theme-dark-gray .member-box {
   border-radius: 4px;
   color: #555;
   display: block;
-}
-.chat-container .chat-box .chat-display .message-wrapper {
-  /* NEW REPLY BUTTON STYLES */
 }
 .chat-container .chat-box .chat-display .message-wrapper .reply-btn {
   opacity: 0;
@@ -277,7 +267,6 @@ body.theme-dark-gray .member-box {
   justify-content: space-between;
   align-items: center;
   position: relative;
-  /* Added relative positioning to anchor the emoji picker */
 }
 .chat-container .chat-box .input-box .emoji {
   height: 100%;
@@ -330,7 +319,7 @@ body.theme-dark-gray .member-box {
   gap: 20px;
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none; /* FIX 2: Prevent text selection */
+          user-select: none; /* Prevent text selection */
 }
 .chat-container .menu-box .menu {
   width: 100%;
@@ -385,7 +374,6 @@ body.theme-dark-gray .member-box {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   z-index: 1;
-  /* Lowest z-index so glass can blur it */
   box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
 }
 .chat-container .menu-box .extra-box .hero-overlay {
@@ -400,10 +388,8 @@ body.theme-dark-gray .member-box {
   border-right: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 30px;
   z-index: 2;
-  /* Sits over the circle */
 }
 .chat-container .menu-box .extra-box .hero-logo {
-  /* width: 90px; */
   position: absolute;
   bottom: 40px;
   left: 20px;
@@ -411,7 +397,6 @@ body.theme-dark-gray .member-box {
   font-weight: 400;
   letter-spacing: 1px;
   z-index: 3;
-  /* Highest z-index so text remains sharp */
 }
 .chat-container .menu-box .extra-box .hero-logo > img {
   width: 90px;

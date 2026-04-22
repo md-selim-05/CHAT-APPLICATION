@@ -133,7 +133,8 @@ io.on('connection', (socket) => {
     }
     
     socket.msgTimestamps.push(now);
-    const safeText = String(data.text || "").substring(0, 150);
+    // FIX 2: Increased message limit to 200 characters
+    const safeText = String(data.text || "").substring(0, 200);
 
     io.to(socket.roomId).emit('chat message', {
       user: socket.username,
