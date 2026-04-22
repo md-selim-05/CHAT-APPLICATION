@@ -54,7 +54,8 @@ body.dark-mode .reply-preview {
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
 }
-body.dark-mode .mem-list, body.dark-mode .mem-head {
+body.dark-mode .mem-list,
+body.dark-mode .mem-head {
   background-color: #333;
   color: #fff;
 }
@@ -115,7 +116,8 @@ body.theme-dark-gray .member-box {
   gap: 10px;
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none; /* Prevent text selection */
+          user-select: none;
+  /* Prevent text selection */
 }
 .chat-container .member-box .mem-head {
   width: 100%;
@@ -228,6 +230,7 @@ body.theme-dark-gray .member-box {
      -moz-user-select: none;
           user-select: none;
   background-color: rgba(255, 255, 255, 0.6);
+  color: black;
   border-radius: 50%;
   padding: 6px;
   display: flex;
@@ -235,8 +238,7 @@ body.theme-dark-gray .member-box {
   align-items: center;
 }
 .chat-container .chat-box .chat-display .message-wrapper .reply-btn:hover {
-  transform: scale(1.1);
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.36);
 }
 .chat-container .chat-box .reply-preview {
   display: flex;
@@ -319,7 +321,8 @@ body.theme-dark-gray .member-box {
   gap: 20px;
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none; /* Prevent text selection */
+          user-select: none;
+  /* Prevent text selection */
 }
 .chat-container .menu-box .menu {
   width: 100%;
