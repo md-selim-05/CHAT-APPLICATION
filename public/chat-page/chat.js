@@ -81,8 +81,22 @@ socket.on("invalid room", (msg) => {
     window.location.href = "/room";
 });
 
-socket.on("room update", (count) => {
-    memberList.innerHTML = `<div class="member" style="text-align:center;">👥 Online Users: ${count}</div>`;
+// Replace the old "room update" listener with this:
+socket.on("room update", (users) => {
+    memberList.innerHTML = ""; // Clear current list
+    
+    // Check if the server sent an array of names
+    if (Array.isArray(users)) {
+        users.forEach(username => {
+            const memDiv = document.createElement('div');
+            memDiv.classList.add('member');
+            memDiv.innerText = `👤 ${username}`;
+            memberList.appendChild(memDiv);
+        });
+    } else {
+        // Fallback just in case your backend still sends a number temporarily
+        memberList.innerHTML = `<div class="member" style="text-align:center;">👥 Online Users: ${users}</div>`;
+    }
 });
 
 socket.on("chat message", (data) => {
@@ -127,7 +141,24 @@ socket.on("chat message", (data) => {
 
         const textNode = document.createTextNode(data.text);
         msgDiv.appendChild(textNode);
+        
+        // --- NEW: Add the Hover Reply Button ---
+        const replyBtn = document.createElement('div');
+        replyBtn.classList.add('reply-btn');
+        replyBtn.innerText = '↩️'; // The arrow icon
+        replyBtn.title = "Reply to message";
+        replyBtn.onclick = () => {
+            // Extract pure text, ignoring quoted HTML
+            let actualText = Array.from(msgDiv.childNodes)
+                .filter(node => node.nodeType === Node.TEXT_NODE)
+                .map(node => node.textContent)
+                .join('').trim();
+            if(actualText) initiateReply(actualText);
+        };
+
+        // Append the message and the button side-by-side
         wrapperDiv.appendChild(msgDiv);
+        wrapperDiv.appendChild(replyBtn);
         
         chatDisplay.appendChild(wrapperDiv);
     }

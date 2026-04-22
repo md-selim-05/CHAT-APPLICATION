@@ -15,18 +15,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // Serves the entire 'public' folder as static assets
 app.use(express.static(join(__dirname, 'public')));
 
-// ---- CORRECTED ROUTES ----
-
+// ---- ROUTES ----
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public/landing-page/landing.html')); //
+  res.sendFile(join(__dirname, 'public/landing-page/landing.html')); 
 });
 
 app.get('/room', (req, res) => {
-  res.sendFile(join(__dirname, 'public/room-page/room.html')); //
+  res.sendFile(join(__dirname, 'public/room-page/room.html')); 
 });
 
 app.get('/chat', (req, res) => {
-  res.sendFile(join(__dirname, 'public/chat-page/chat.html'));//
+  res.sendFile(join(__dirname, 'public/chat-page/chat.html'));
 });
 
 // --------------------------
@@ -49,9 +48,10 @@ io.on('connection', (socket) => {
     username = String(username || "User").substring(0, 8);
     const roomId = uuidv4().slice(0, 6);
     
+    // FIX: Use a Map instead of a Set to explicitly bind socket IDs to Usernames
     activeRooms.set(roomId, {
       capacity: parseInt(capacity) || 10,
-      users: new Set([socket.id])
+      users: new Map([[socket.id, username]]) 
     });
 
     socket.join(roomId);
@@ -60,7 +60,10 @@ io.on('connection', (socket) => {
     socket.color = getRandomColor();
 
     socket.emit('room created', roomId);
-    io.to(roomId).emit('room update', activeRooms.get(roomId).users.size);
+    
+    // Convert Map values to an Array and emit
+    const usersArray = Array.from(activeRooms.get(roomId).users.values());
+    io.to(roomId).emit('room update', usersArray);
 
     io.to(roomId).emit('chat message', {
       user: "System",
@@ -71,7 +74,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join room', ({ username, roomId }) => {
-    // ENFORCE: Max 8 Characters for Username
     username = String(username || "User").substring(0, 8);
     const roomData = activeRooms.get(roomId);
     
@@ -90,14 +92,19 @@ io.on('connection', (socket) => {
       roomTimeouts.delete(roomId);
     }
 
-    roomData.users.add(socket.id);
+    // FIX: Add the new user to the Map directly
+    roomData.users.set(socket.id, username);
+    
     socket.join(roomId);
     socket.username = username;
     socket.roomId = roomId;
     socket.color = getRandomColor();
     
     socket.emit('room joined', roomId); 
-    io.to(roomId).emit('room update', roomData.users.size);
+    
+    // Convert Map values to an Array and emit
+    const usersArray = Array.from(roomData.users.values());
+    io.to(roomId).emit('room update', usersArray);
 
     io.to(roomId).emit('chat message', {
       user: "System",
@@ -142,8 +149,12 @@ io.on('connection', (socket) => {
       const roomData = activeRooms.get(socket.roomId);
       
       if (roomData) {
+        // FIX: Delete the user from the Map
         roomData.users.delete(socket.id);
-        io.to(socket.roomId).emit('room update', roomData.users.size);
+        
+        // Convert Map values to an Array and emit the updated list
+        const usersArray = Array.from(roomData.users.values());
+        io.to(socket.roomId).emit('room update', usersArray);
       }
 
       io.to(socket.roomId).emit('chat message', {
