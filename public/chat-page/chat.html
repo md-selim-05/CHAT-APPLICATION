@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat UI</title>
     <link rel="stylesheet" href="/chat-page/chat.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
+
 <body>
-    
+
     <div class="chat-container">
 
         <div class="member-box">
@@ -21,34 +24,38 @@
 
         <div class="chat-box">
             <div class="chat-display" id="chat-display"></div>
-            
+
             <div id="reply-preview" class="reply-preview hidden">
                 <div class="reply-content">
                     Replying to: <strong id="reply-text"></strong>
                 </div>
                 <button id="cancel-reply" title="Cancel Reply">✖</button>
             </div>
-            
+
             <div class="input-box">
-                <div class="emoji" id="emoji-btn" title="Emoji">😊</div>
-                
+                <button class="emoji" id="emoji-btn"><i class="ri-emoji-sticker-fill"></i></button>
                 <div class="emoji-picker hidden" id="emoji-picker"></div>
-                
-                <input type="text" name="text" id="text" placeholder="Enter message... (Drag right to reply)">
+
+                <input type="text" name="text" id="text" placeholder="Write message...">
                 <button class="send" id="send-btn">Send</button>
             </div>
         </div>
 
         <div class="menu-box">
             <div class="menu">
-                <button id="darkModeBtn" class="menu-btn">🌙 Toggle Dark Mode</button>
-                <button id="themeBtn" class="menu-btn">🎨 Change Chat Theme</button>
-                <button id="copyCodeBtn" class="menu-btn">📄 Copy Code: <span id="display-room-id">...</span></button>
-                <button id="clearChatBtn" class="menu-btn">🗑️ Clear Chat</button>
-                <button id="exitChatBtn" class="menu-btn">🚪 Exit Chat</button>
+                <button id="darkModeBtn" class="menu-btn">Toggle Dark Mode</button>
+                <button id="themeBtn" class="menu-btn">Change Chat Theme</button>
+                <button id="copyCodeBtn" class="menu-btn">Copy Code: <span id="display-room-id">...</span></button>
+                <button id="clearChatBtn" class="menu-btn">Clear Chat</button>
+                <button id="exitChatBtn" class="menu-btn">Exit Chat</button>
             </div>
             <div class="extra-box" id="extra-box">
-                <p style="text-align:center; padding: 10px; color: black;">Extra Tools</p>
+                <div class="center-circle"></div>
+
+                <div class="hero-overlay"></div>
+
+                <div class="hero-logo"><img src="../ASSETS/Anno_Logo.png" alt=""></div>
+
             </div>
         </div>
 
@@ -57,4 +64,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/chat-page/chat.js"></script>
 </body>
+
 </html>

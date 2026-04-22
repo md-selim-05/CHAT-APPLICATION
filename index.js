@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('chat message', {
       user: "System",
       text: `${username} created the room (Max Capacity: ${activeRooms.get(roomId).capacity})`,
-      color: "#aaa",
+      color: "#2a2a2a",
       system: true
     });
   });
@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('chat message', {
       user: "System",
       text: `${username} - joined the room`,
-      color: "#aaa",
+      color: "#2a2a2a",
       system: true
     });
   });
@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
       io.to(socket.roomId).emit('chat message', {
         user: "System",
         text: `${socket.username} - left the room`,
-        color: "#aaa",
+        color: "#2a2a2a",
         system: true
       });
 

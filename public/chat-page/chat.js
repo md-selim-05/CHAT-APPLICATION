@@ -90,7 +90,8 @@ socket.on("room update", (users) => {
         users.forEach(username => {
             const memDiv = document.createElement('div');
             memDiv.classList.add('member');
-            memDiv.innerText = `👤 ${username}`;
+            // FIX 3: Added the requested icon
+            memDiv.innerHTML = `<i class="ri-user-fill"></i> ${username}`;
             memberList.appendChild(memDiv);
         });
     } else {
@@ -100,14 +101,19 @@ socket.on("room update", (users) => {
 });
 
 socket.on("chat message", (data) => {
+    // FIX 1: Overhauled system messages to make them highly visible pills
     if (data.system) {
         const sysDiv = document.createElement('div');
-        sysDiv.style.color = data.color || '#333';
+        sysDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'; // Dark background pill
+        sysDiv.style.color = '#ffffff'; // Explicitly white text
         sysDiv.style.textAlign = 'center';
-        sysDiv.style.margin = '10px 0';
-        sysDiv.style.fontSize = '0.9rem';
+        sysDiv.style.margin = '10px auto'; // Center in display
+        sysDiv.style.padding = '6px 16px'; // Pill padding
+        sysDiv.style.borderRadius = '20px'; // Pill shape
+        sysDiv.style.fontSize = '0.85rem';
         sysDiv.style.fontWeight = 'bold';
-        sysDiv.innerText = `> ${data.text}`;
+        sysDiv.style.width = 'fit-content';
+        sysDiv.innerText = data.text;
         chatDisplay.appendChild(sysDiv);
     } else {
         const isOwn = data.user === myUsername;
@@ -122,12 +128,13 @@ socket.on("chat message", (data) => {
             msgDiv.style.borderLeft = `4px solid ${data.color}`;
         }
 
+        // FIX 4: Refined the incoming message username display to stand out properly
         if (!isOwn) {
             const userSpan = document.createElement('div');
-            userSpan.style.fontSize = '0.75rem';
+            userSpan.style.fontSize = '0.85rem';
             userSpan.style.color = data.color || '#333';
-            userSpan.style.marginBottom = '4px';
-            userSpan.style.fontWeight = 'bold';
+            userSpan.style.marginBottom = '5px';
+            userSpan.style.fontWeight = '800';
             userSpan.innerText = data.user;
             msgDiv.appendChild(userSpan);
         }
