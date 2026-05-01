@@ -187,9 +187,20 @@ function sendMessage() {
     replyingToText = null;
     replyPreview.classList.add('hidden');
     emojiPicker.classList.add('hidden');
+
+    messageInput.focus(); 
 }
 
 sendBtn.addEventListener('click', sendMessage);
+
+// FIX: Prevents the Send button from stealing focus when tapped
+sendBtn.addEventListener('mousedown', (e) => {
+    e.preventDefault(); 
+});
+sendBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); 
+    sendMessage(); // Fires instantly on mobile tap
+});
 
 // Instant enter key send without newline
 messageInput.addEventListener('keydown', e => {

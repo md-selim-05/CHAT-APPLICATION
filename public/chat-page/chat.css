@@ -450,18 +450,20 @@ body.theme-dark-gray .member-box {
 }
 
 /* --- RESPONSIVE MOBILE LAYOUT --- */
+/* --- RESPONSIVE MOBILE LAYOUT --- */
 @media (max-width: 768px) {
   html, body {
-    height: 100dvh; /* Uses dynamic viewport height */
+    height: 100dvh;
     width: 100vw;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevents body scrolling */
+    overflow: hidden;
+    display: block; /* FIX: Kills the flex-centering that caused the gap */
   }
   .chat-container {
     flex-direction: column;
     width: 100%;
-    height: 100dvh;
+    height: 100%; /* FIX: Stretches exactly to the body bounds */
     padding: 0;
     margin: 0;
   }
@@ -472,10 +474,10 @@ body.theme-dark-gray .member-box {
     width: 100%;
     height: 100%;
     border-radius: 0;
+    border: none; /* FIX: Removes the border adding extra pixels */
     padding: 10px;
     display: flex;
-    flex-direction: column; /* Strict top-to-bottom stack */
-    /* 1. Header is locked and cannot shrink */
+    flex-direction: column;
   }
   .chat-container .chat-box .mobile-header {
     flex-shrink: 0;
@@ -519,17 +521,11 @@ body.theme-dark-gray .member-box {
     justify-content: center;
     align-items: center;
   }
-  .chat-container .chat-box {
-    /* 2. Chat display takes up exactly the remaining middle space */
-  }
   .chat-container .chat-box .chat-display {
     flex: 1;
-    height: 0; /* Forces internal scrolling */
+    height: 0;
     overflow-y: auto;
     margin-bottom: 10px;
-  }
-  .chat-container .chat-box {
-    /* 3. Input box is locked at the bottom and cannot shrink */
   }
   .chat-container .chat-box .input-box {
     flex-shrink: 0;
