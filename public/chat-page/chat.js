@@ -4,7 +4,6 @@ const messageInput = document.getElementById('text');
 const sendBtn = document.getElementById('send-btn');
 const memberList = document.getElementById('member-list');
 const displayRoomId = document.getElementById('display-room-id');
-
 const replyPreview = document.getElementById('reply-preview');
 const replyTextEl = document.getElementById('reply-text');
 const cancelReplyBtn = document.getElementById('cancel-reply');
@@ -20,8 +19,7 @@ let replyingToText = null;
 // --- 1. EMOJI PICKER LOGIC ---
 const emojiBtn = document.getElementById('emoji-btn');
 const emojiPicker = document.getElementById('emoji-picker');
-
-const emojis = ["😀", "😂", "🤣", "😊", "😍", "😎", "🤔", "🤫", "🤯", "💀", "👽", "🤖", "👾", "👍", "👎", "👏", "🤝", "🔥", "✨", "⭐", "🌟", "💥", "💯", "👀", "❤", "💔", "🚨", "🚀", "💻", "📡"];
+const emojis = ["😀", "😂", "🥰", "😎", "🤩", "🤔", "🙄", "😴", "🥶", "🤯", "🤠", "🥳", "🤓", "🤡", "🤫", "🤬", "😡", "😠", "🥺", "🥱", "🤤", "😈", "👿", "💀", "💩", "👻", "👽", "👾", "🤖", "🎃"];
 
 emojis.forEach(emoji => {
     const span = document.createElement('span');
@@ -53,7 +51,6 @@ const chatParamsStr = sessionStorage.getItem('chatParams');
 if (!chatParamsStr) {
     window.location.href = "/room";
 }
-
 const params = JSON.parse(chatParamsStr);
 const myUsername = params.name;
 
@@ -81,7 +78,7 @@ socket.on("invalid room", (msg) => {
 
 socket.on("room update", (users) => {
     memberList.innerHTML = ""; // Clear current list
-
+    
     // Check if the server sent an array of names
     if (Array.isArray(users)) {
         users.forEach(username => {
@@ -148,9 +145,9 @@ socket.on("chat message", (data) => {
         // --- Hover Reply Button ---
         const replyBtn = document.createElement('div');
         replyBtn.classList.add('reply-btn');
-        // THE REQUESTED REMIXICON FIX
         replyBtn.innerHTML = '<i class="ri-arrow-go-forward-line"></i>';
         replyBtn.title = "Reply to message";
+        
         replyBtn.onclick = () => {
             let actualText = Array.from(msgDiv.childNodes)
                 .filter(node => node.nodeType === Node.TEXT_NODE)
@@ -161,12 +158,11 @@ socket.on("chat message", (data) => {
 
         wrapperDiv.appendChild(msgDiv);
         wrapperDiv.appendChild(replyBtn);
-
         chatDisplay.appendChild(wrapperDiv);
     }
-
     chatDisplay.scrollTop = chatDisplay.scrollHeight;
 });
+
 
 // --- 3. MESSAGE SENDING & REPLIES ---
 function initiateReply(text) {
@@ -184,9 +180,9 @@ cancelReplyBtn.addEventListener('click', () => {
 function sendMessage() {
     const text = messageInput.value.trim();
     if (text === "") return;
-
+    
     socket.emit("chat message", { text: text, replyTo: replyingToText });
-
+    
     messageInput.value = "";
     replyingToText = null;
     replyPreview.classList.add('hidden');
@@ -202,6 +198,7 @@ messageInput.addEventListener('keydown', e => {
         sendMessage();
     }
 });
+
 
 // --- 4. UNIVERSAL DRAG-TO-REPLY LOGIC ---
 let startX = 0;
@@ -221,7 +218,6 @@ function drag(e) {
     if (!isDragging || !swipedMsg) return;
     let currentX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].screenX;
     let diff = currentX - startX;
-
     if (diff > 0 && diff < 80) {
         swipedMsg.style.transform = `translateX(${diff}px)`;
     }
@@ -232,16 +228,15 @@ function endDrag(e) {
     isDragging = false;
     let endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].screenX;
     let diff = endX - startX;
-
+    
     swipedMsg.style.transition = 'transform 0.3s ease';
     swipedMsg.style.transform = `translateX(0px)`;
-
+    
     if (diff > 50) {
         let actualText = Array.from(swipedMsg.childNodes)
             .filter(node => node.nodeType === Node.TEXT_NODE)
             .map(node => node.textContent)
             .join('').trim();
-
         if (actualText) initiateReply(actualText);
     }
     swipedMsg = null;
@@ -255,11 +250,12 @@ chatDisplay.addEventListener('touchstart', startDrag, { passive: true });
 window.addEventListener('touchmove', drag, { passive: true });
 window.addEventListener('touchend', endDrag);
 
+
 // --- 5. MENU BOX OPTIONS LOGIC ---
 darkModeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
-    darkModeBtn.innerText = document.body.classList.contains('dark-mode')
-        ? "Toggle Light Mode"
+    darkModeBtn.innerText = document.body.classList.contains('dark-mode') 
+        ? "Toggle Light Mode" 
         : "Toggle Dark Mode";
 });
 
@@ -291,5 +287,33 @@ exitChatBtn.addEventListener('click', () => {
     if (confirm("Are you sure you want to exit the chat?")) {
         sessionStorage.removeItem('chatParams');
         window.location.href = "/room";
+    }
+});
+
+// --- 6. MOBILE RESPONSIVENESS LOGIC ---
+const mobileMenuTrigger = document.getElementById('mobile-menu-trigger'); // Title is now trigger
+const mobileExitBtn = document.getElementById('mobile-exit-btn');
+const menuBox = document.querySelector('.menu-box');
+
+if (mobileMenuTrigger) {
+    mobileMenuTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuBox.classList.toggle('active');
+    });
+}
+
+if (mobileExitBtn) {
+    mobileExitBtn.addEventListener('click', () => {
+        if (confirm("Are you sure you want to exit the chat?")) {
+            sessionStorage.removeItem('chatParams');
+            window.location.href = "/room";
+        }
+    });
+}
+
+// Close the mobile dropdown menu if the user clicks outside of it
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && !menuBox.contains(e.target) && e.target !== mobileMenuTrigger) {
+        menuBox.classList.remove('active');
     }
 });

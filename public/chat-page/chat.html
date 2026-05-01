@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,8 @@
     <link rel="stylesheet" href="/chat-page/chat.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
-
 <body>
-
     <div class="chat-container">
-
         <div class="member-box">
             <div class="mem-head">
                 <h3>MEMBERS</h3>
@@ -21,26 +17,36 @@
                 <div class="member" style="text-align: center;">Waiting for server...</div>
             </div>
         </div>
-
         <div class="chat-box">
-            <div class="chat-display" id="chat-display"></div>
+            
+            <!-- MOBILE HEADER -->
+            <div class="mobile-header">
+                <img src="../ASSETS/Anno_Logo.png" alt="Logo" class="mobile-logo">
+                <!-- Title is now the dropdown trigger -->
+                <div class="mobile-room-title" id="mobile-menu-trigger">
+                    AnnoRoom (Temp) <i class="ri-arrow-down-s-fill" style="margin-left: 4px; font-size: 1rem;"></i>
+                </div>
+                <div class="mobile-actions">
+                    <button id="mobile-exit-btn"><i class="ri-logout-box-r-line"></i></button>
+                </div>
+            </div>
 
+            <div class="chat-display" id="chat-display"></div>
+            
             <div id="reply-preview" class="reply-preview hidden">
                 <div class="reply-content">
                     Replying to: <strong id="reply-text"></strong>
                 </div>
                 <button id="cancel-reply" title="Cancel Reply">✖</button>
             </div>
-
+            
             <div class="input-box">
                 <button class="emoji" id="emoji-btn"><i class="ri-emoji-sticker-fill"></i></button>
                 <div class="emoji-picker hidden" id="emoji-picker"></div>
-
                 <input type="text" name="text" id="text" placeholder="Write message...">
                 <button class="send" id="send-btn">Send</button>
             </div>
         </div>
-
         <div class="menu-box">
             <div class="menu">
                 <button id="darkModeBtn" class="menu-btn">Toggle Dark Mode</button>
@@ -51,18 +57,13 @@
             </div>
             <div class="extra-box" id="extra-box">
                 <div class="center-circle"></div>
-
                 <div class="hero-overlay"></div>
-
                 <div class="hero-logo"><img src="../ASSETS/Anno_Logo.png" alt=""></div>
-
             </div>
         </div>
-
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/chat-page/chat.js"></script>
 </body>
-
 </html>
