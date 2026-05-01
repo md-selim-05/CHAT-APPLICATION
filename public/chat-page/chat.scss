@@ -424,7 +424,6 @@ body {
 }
 
 /* --- RESPONSIVE MOBILE LAYOUT --- */
-/* --- RESPONSIVE MOBILE LAYOUT --- */
 @media (max-width: 768px) {
   
   html, body {
@@ -433,13 +432,15 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden; 
-    display: block; /* FIX: Kills the flex-centering that caused the gap */
+    display: block; 
   }
 
   .chat-container {
     flex-direction: column;
     width: 100%;
-    height: 100%; /* FIX: Stretches exactly to the body bounds */
+    height: 100dvh !important; /* FIX: Forces it to exactly match screen height */
+    max-height: none !important; /* FIX: Kills the 700px limit from desktop */
+    max-width: none !important;
     padding: 0; 
     margin: 0;
 
@@ -451,7 +452,7 @@ body {
       width: 100%;
       height: 100%;
       border-radius: 0; 
-      border: none; /* FIX: Removes the border adding extra pixels */
+      border: none; 
       padding: 10px;
       display: flex;
       flex-direction: column; 
