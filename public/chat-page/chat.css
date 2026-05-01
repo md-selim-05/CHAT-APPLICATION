@@ -12,9 +12,9 @@ html {
 body {
   font-family: Arial, sans-serif;
   height: 100vh;
-  height: 100dvh; /* FIX: Dynamically adjusts when mobile keyboard opens */
+  height: 100dvh;
   width: 100vw;
-  overflow: hidden; /* FIX: Prevents entire body from scrolling out of view */
+  overflow: hidden;
   background: linear-gradient(135deg, rgb(142, 142, 232), rgb(228, 112, 228), rgb(233, 129, 146));
   color: #fff;
   display: flex;
@@ -102,7 +102,7 @@ body.theme-dark-gray .member-box {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  height: 95%; /* Constrain height to viewport */
+  height: 95%;
   max-height: 700px;
   width: 100%;
   max-width: 1200px;
@@ -167,8 +167,8 @@ body.theme-dark-gray .member-box {
 }
 .chat-container .chat-box .chat-display {
   width: 100%;
-  flex: 1; /* Takes up remaining space */
-  height: 0; /* Forces internal scroll */
+  flex: 1;
+  height: 0;
   background-color: rgba(250, 235, 215, 0.281);
   border: 1px solid rgba(255, 255, 255, 0.222);
   border-radius: 16px;
@@ -270,8 +270,8 @@ body.theme-dark-gray .member-box {
 }
 .chat-container .chat-box .input-box {
   width: 100%;
-  height: 55px; /* FIX: Fixed height prevents squishing */
-  flex-shrink: 0; /* FIX: Stops input box from shrinking when keyboard opens */
+  height: 50px; /* FIX: Set exactly to 50px to match buttons perfectly */
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -282,7 +282,7 @@ body.theme-dark-gray .member-box {
 .chat-container .chat-box .input-box .emoji {
   height: 50px;
   width: 50px;
-  flex-shrink: 0; /* FIX: Forces perfect circle */
+  flex-shrink: 0;
   background-color: rgba(255, 0, 0, 0.416);
   border: 1px solid rgba(255, 0, 0, 0.248);
   border-radius: 50%;
@@ -296,8 +296,8 @@ body.theme-dark-gray .member-box {
   color: white;
 }
 .chat-container .chat-box .input-box #text {
-  height: 100%;
-  flex: 1; /* Takes up remaining space */
+  height: 50px; /* FIX: Matches container and button height */
+  flex: 1;
   padding: 0 15px;
   border: none;
   border-radius: 30px;
@@ -310,7 +310,7 @@ body.theme-dark-gray .member-box {
 .chat-container .chat-box .input-box .send {
   height: 50px;
   width: 80px;
-  flex-shrink: 0; /* FIX: Prevents shrinking */
+  flex-shrink: 0;
   border: none;
   background-color: rgb(121, 237, 32);
   border-radius: 30px;
@@ -452,14 +452,23 @@ body.theme-dark-gray .member-box {
 
 /* --- RESPONSIVE MOBILE LAYOUT --- */
 @media (max-width: 768px) {
-  body {
-    padding: 0; /* Maximize screen real estate on mobile */
+  /* FIX: Forces the body to remain fixed in place, preventing the keyboard from pushing the header out of view */
+  html, body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
   }
   .chat-container {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: 0; /* Edge to edge */
+    padding: 0;
     max-height: none;
   }
   .chat-container .member-box, .chat-container .extra-box {
@@ -468,33 +477,35 @@ body.theme-dark-gray .member-box {
   .chat-container .chat-box {
     width: 100%;
     height: 100%;
-    border-radius: 0; /* No rounded corners on mobile full screen */
+    border-radius: 0;
     padding: 10px;
     position: relative;
   }
   .chat-container .chat-box .mobile-header {
-    flex-shrink: 0; /* Prevents header from squishing */
+    flex-shrink: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
+    /* FIX: Raw logo, no circle */
   }
   .chat-container .chat-box .mobile-header .mobile-logo {
-    width: 35px;
-    height: 35px;
-    background-color: #ccc;
-    border-radius: 50%;
-    -o-object-fit: cover;
-       object-fit: cover;
+    width: 40px;
+    height: 40px;
+    -o-object-fit: contain;
+       object-fit: contain;
+  }
+  .chat-container .chat-box .mobile-header {
+    /* FIX: Bigger pill */
   }
   .chat-container .chat-box .mobile-header .mobile-room-title {
     background: rgba(0, 0, 0, 0.4);
     color: white;
-    padding: 8px 15px;
-    border-radius: 20px;
+    padding: 10px 22px; /* Increased padding */
+    border-radius: 25px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1.1rem; /* Increased font size */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -521,10 +532,10 @@ body.theme-dark-gray .member-box {
   .chat-container .chat-box .mobile-header .mobile-actions button#mobile-exit-btn {
     background: #ff3b3b;
     color: white;
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
   .chat-container .chat-box .input-box .emoji {
     width: 45px;
@@ -532,6 +543,9 @@ body.theme-dark-gray .member-box {
   }
   .chat-container .chat-box .input-box .emoji i {
     font-size: 24px;
+  }
+  .chat-container .chat-box .input-box #text {
+    height: 45px; /* Ensures input perfectly matches buttons on mobile */
   }
   .chat-container .chat-box .input-box .send {
     width: 65px;
@@ -543,7 +557,7 @@ body.theme-dark-gray .member-box {
   }
   .chat-container .menu-box {
     position: absolute;
-    top: 60px; /* Sits right under the mobile title */
+    top: 65px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -562,6 +576,6 @@ body.theme-dark-gray .member-box {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   }
   .chat-container .menu-box .menu #exitChatBtn {
-    display: none; /* Hide exit button in dropdown since it's in the header */
+    display: none;
   }
 }/*# sourceMappingURL=chat.css.map */
