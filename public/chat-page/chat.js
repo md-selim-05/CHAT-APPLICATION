@@ -317,3 +317,14 @@ document.addEventListener('click', (e) => {
         menuBox.classList.remove('active');
     }
 });
+
+// --- ANTI-SCROLL FIX FOR ANDROID KEYBOARD ---
+const chatInputToFix = document.getElementById('text');
+if (chatInputToFix) {
+    chatInputToFix.addEventListener('focus', () => {
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+        }, 50); // Forces the page back to the top instantly
+    });
+}

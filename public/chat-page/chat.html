@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, interactive-widget=resizes-content">
     <title>Chat UI</title>
     <link rel="stylesheet" href="/chat-page/chat.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
+
 <body>
     <div class="chat-container">
         <div class="member-box">
@@ -18,7 +20,7 @@
             </div>
         </div>
         <div class="chat-box">
-            
+
             <!-- MOBILE HEADER -->
             <div class="mobile-header">
                 <img src="../ASSETS/Anno_Logo.png" alt="Logo" class="mobile-logo">
@@ -32,14 +34,14 @@
             </div>
 
             <div class="chat-display" id="chat-display"></div>
-            
+
             <div id="reply-preview" class="reply-preview hidden">
                 <div class="reply-content">
                     Replying to: <strong id="reply-text"></strong>
                 </div>
                 <button id="cancel-reply" title="Cancel Reply">✖</button>
             </div>
-            
+
             <div class="input-box">
                 <button class="emoji" id="emoji-btn"><i class="ri-emoji-sticker-fill"></i></button>
                 <div class="emoji-picker hidden" id="emoji-picker"></div>
@@ -66,4 +68,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/chat-page/chat.js"></script>
 </body>
+
 </html>

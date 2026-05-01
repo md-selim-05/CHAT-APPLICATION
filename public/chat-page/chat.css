@@ -451,26 +451,19 @@ body.theme-dark-gray .member-box {
 
 /* --- RESPONSIVE MOBILE LAYOUT --- */
 @media (max-width: 768px) {
-  /* STRICTLY lock the app to the visual window bounds */
   html, body {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
+    height: 100dvh; /* Uses dynamic viewport height */
+    width: 100vw;
     margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents body scrolling */
   }
   .chat-container {
     flex-direction: column;
     width: 100%;
-    height: 100%; /* Dynamically matches the space between top and bottom */
+    height: 100dvh;
     padding: 0;
     margin: 0;
-    max-height: none;
   }
   .chat-container .member-box, .chat-container .extra-box {
     display: none !important;
@@ -481,10 +474,11 @@ body.theme-dark-gray .member-box {
     border-radius: 0;
     padding: 10px;
     display: flex;
-    flex-direction: column; /* Strict Flexbox Stack */
+    flex-direction: column; /* Strict top-to-bottom stack */
+    /* 1. Header is locked and cannot shrink */
   }
   .chat-container .chat-box .mobile-header {
-    flex-shrink: 0; /* PREVENTS HEADER FROM SQUISHING */
+    flex-shrink: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -512,21 +506,6 @@ body.theme-dark-gray .member-box {
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
-    transition: transform 0.1s ease;
-  }
-  .chat-container .chat-box .mobile-header .mobile-room-title:active {
-    transform: scale(0.95);
-  }
-  .chat-container .chat-box .mobile-header .mobile-actions {
-    display: flex;
-    align-items: center;
-  }
-  .chat-container .chat-box .mobile-header .mobile-actions button {
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .chat-container .chat-box .mobile-header .mobile-actions button#mobile-exit-btn {
     background: #ff3b3b;
@@ -535,16 +514,28 @@ body.theme-dark-gray .member-box {
     height: 38px;
     border-radius: 10px;
     font-size: 1.3rem;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chat-container .chat-box {
+    /* 2. Chat display takes up exactly the remaining middle space */
   }
   .chat-container .chat-box .chat-display {
-    flex: 1; /* TAKES UP EXACTLY THE MIDDLE SPACE dynamically */
-    height: 0; /* Crucial for scrolling inside flex */
+    flex: 1;
+    height: 0; /* Forces internal scrolling */
     overflow-y: auto;
     margin-bottom: 10px;
   }
+  .chat-container .chat-box {
+    /* 3. Input box is locked at the bottom and cannot shrink */
+  }
   .chat-container .chat-box .input-box {
-    flex-shrink: 0; /* PREVENTS INPUT FROM SQUISHING */
+    flex-shrink: 0;
     height: 50px;
+    display: flex;
+    gap: 10px;
   }
   .chat-container .chat-box .input-box .emoji {
     width: 50px;
@@ -555,6 +546,7 @@ body.theme-dark-gray .member-box {
   }
   .chat-container .chat-box .input-box #text {
     height: 50px;
+    flex: 1;
   }
   .chat-container .chat-box .input-box .send {
     width: 70px;
@@ -562,7 +554,7 @@ body.theme-dark-gray .member-box {
     font-size: 14px;
   }
   .chat-container {
-    /* Dynamic Island Dropdown Menu */
+    /* Dropdown Menu */
   }
   .chat-container .menu-box {
     position: absolute;
